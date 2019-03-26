@@ -154,3 +154,71 @@
              (cr u)))))
       ((ccons c0) c1)))))
     
+
+(define (hailstone-count n)
+  (if (<= n 1) 1
+      (if (= (remainder n 2) 0)
+          (1+ (hailstone-count (quotient n 2)))
+          (1+ (hailstone-count (1+ (* 3 n)))))))
+
+(define hailstone-op
+  (lambda (f)
+    (lambda (n)
+      (if (<= n 1) 1
+          (if (= (remainder n 2) 0)
+              (1+ (f (quotient n 2)))
+              (1+ (f (1+ (* 3 n)))))))))
+
+(define (hailstone-f n)
+  (repeated n hailstone-op 'empty))
+
+(define (repeat-inf f)
+  (lambda (x)
+    ((f (repeat-inf f)) x)))
+
+(define hailstone-inf
+  (repeat-inf hailstone-op))
+
+(define c:2
+  (lambda (n)
+    (cr
+     ((n
+       (lambda (p)
+         ((ccons
+           (cs (cl p)))
+          (((c/2 (cl p))
+            (cr p))
+           (cs (cr p))))))
+      ((ccons c0) c0)))))
+
+(define Y
+  (lambda (F)
+    ((lambda (x) (F (x x)))
+     (lambda (x) (F (x x))))))
+
+(define Z
+  (lambda (F)
+    ((lambda (x) (F
+                  (lambda (y)
+                    ((x x) y))))
+     (lambda (x) (F
+                  (lambda (y)
+                    ((x x) y)))))))
+
+(define gamma-h
+  (lambda (f)
+    (lambda (n)
+      (((c=0 n) c1)
+       (((c=0 (cp n)) c1)
+        (lambda (x)
+          ((cs
+            (((c/2 n)
+              (f (c:2 n)))
+             (f (cs ((c* c3) n))))) x)))))))
+  
+      
+(define ch (Z gamma-h))
+             
+(define ef (lambda (x) (/ x "error")))
+
+(define (my-if b x y) (if b x y))
